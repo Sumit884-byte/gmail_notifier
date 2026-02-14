@@ -58,50 +58,60 @@ python gmail_notifier.py
 - `gmail_check.log`: Log file (located in the script folder).
 - `last_count.txt`: Stores state (located in the script folder).
 
-## Automatic Startup (on Reboot)
+## Automatic Startup & Persistence
 
-### Linux (Systemd)
-To ensure the notifier starts automatically when you log in:
+The project includes an **automatic setup script** that configures the notifier to start when you log in, tailored to your operating system.
+
+### One-Click Setup
+After configuring your `.env` file and creating the virtual environment, simply run:
+```bash
+python setup_startup.py
+```
+
+**What it does:**
+- **Linux**: Creates and enables a `systemd` user service.
+- **Windows**: Creates a startup batch file in your `AppData\...\Startup` folder.
+- **macOS**: Creates and loads a `LaunchAgent` `.plist` file.
+
+### Manual Setup (Optional)
+If you prefer to do it manually, you can find the detailed instructions below for your OS:
+
+<details>
+<summary>Linux (Systemd)</summary>
 
 1. Create the service file:
    ```bash
    mkdir -p ~/.config/systemd/user/
    nano ~/.config/systemd/user/gmail-notifier.service
    ```
-
-2. Paste the following configuration (standardize paths if necessary):
+2. Paste the configuration (update paths):
    ```ini
    [Unit]
    Description=Gmail Notifier Service
-   After=network.target
-
    [Service]
-   # Get the full path to your venv and script
-   ExecStart=/path/to/your/project/venv/bin/python /path/to/your/project/gmail_notifier.py
-   WorkingDirectory=/path/to/your/project
+   ExecStart=/path/to/venv/bin/python /path/to/gmail_notifier.py
    Restart=always
-   Environment=DISPLAY=:0
-   Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
-
    [Install]
    WantedBy=default.target
    ```
-   *Tip: Use `pwd` in your terminal to find your project path.*
+3. Run: `systemctl --user enable --now gmail-notifier.service`
+</details>
 
-3. Enable and start:
-   ```bash
-   systemctl --user daemon-reload
-   systemctl --user enable gmail-notifier.service
-   systemctl --user start gmail-notifier.service
-   ```
+<details>
+<summary>Windows (Startup Folder)</summary>
 
-### Windows (Startup Folder)
-1. Create a shortcut to `pythonw.exe` (found in your `venv\Scripts`) and pass `gmail_notifier.py` as an argument.
-2. Press `Win + R`, type `shell:startup`, and press Enter.
-3. Paste the shortcut into this folder.
+1. Create a shortcut to `pythonw.exe` from your `venv\Scripts`.
+2. Move it to `shell:startup`.
+</details>
 
-### macOS (Launch Agents)
-Use a Launch Agent `.plist` file in `~/Library/LaunchAgents/`.
+<details>
+<summary>macOS (Launch Agents)</summary>
+
+1. Create a `.plist` in `~/Library/LaunchAgents/`.
+2. Use `launchctl load` to start it.
+</details>
+
+---
 
 ---
 
