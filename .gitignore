@@ -1,0 +1,6 @@
+venv/
+*.pyc
+__pycache__/
+.env
+gmail_check.log
+last_count.txt
