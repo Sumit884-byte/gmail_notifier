@@ -9,10 +9,34 @@ BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
 # === CREDENTIALS ===
-# USERNAME = os.getenv("GMAIL_USERNAME", "sah299610@gmail.com")
-USERNAME = os.getenv("GMAIL_USERNAME")
+ACCOUNTS = []
 
-PASSWORD = os.getenv("GMAIL_PASSWORD")
+# Single account for backward compatibility
+if os.getenv("GMAIL_USERNAME") and os.getenv("GMAIL_PASSWORD"):
+    ACCOUNTS.append({
+        "email": os.getenv("GMAIL_USERNAME"),
+        "password": os.getenv("GMAIL_PASSWORD")
+    })
+
+# Multiple accounts from environment variable
+# Format 1: email1:pass1,email2:pass2
+extra_accounts = os.getenv("GMAIL_ACCOUNTS", "")
+if extra_accounts:
+    for pair in extra_accounts.split(","):
+        if ":" in pair:
+            email, password = pair.split(":", 1)
+            ACCOUNTS.append({"email": email.strip(), "password": password.strip()})
+
+# Format 2 (JSON): [{"email": "...", "password": "..."}, ...]
+accounts_json = os.getenv("GMAIL_ACCOUNTS_JSON", "")
+if accounts_json:
+    try:
+        import json
+        JSON_ACCOUNTS = json.loads(accounts_json)
+        if isinstance(JSON_ACCOUNTS, list):
+            ACCOUNTS.extend(JSON_ACCOUNTS)
+    except Exception:
+        pass
 
 # === URLS ===
 ATOM_FEED = os.getenv("GMAIL_ATOM_FEED", "https://mail.google.com/mail/feed/atom")

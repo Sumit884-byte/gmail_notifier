@@ -1,0 +1,18 @@
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows-test
+    devices:
+      - /dev/kvm
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+      - 3389:3389/tcp
+      - 3389:3389/udp
+    environment:
+      VERSION: "win11"
+      RAM_SIZE: "8G" # Providing 8GB RAM to bypass the ramdisk creation error
+      CPU_CORES: "4"
+    stop_grace_period: 2m
+    restart: on-failure

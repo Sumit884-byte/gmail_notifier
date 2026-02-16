@@ -3,11 +3,12 @@
 A desktop notification service for unread Gmail messages.
 
 ## Features
-- Real-time monitoring of unread emails.
-- Desktop notifications using `notify-send` (Linux) or native OS popups.
+- **Multi-Account Support**: Monitor multiple Gmail accounts simultaneously.
+- **Interactive Notifications**: Click the notification to open the specific email in your browser.
+- **Auto-Reloader**: Dynamically restarts the service when you update your settings or code.
 - **High-quality sound notifications**: Includes a premium "Chime" sound (`notify.wav`) for clear alerts.
-- Detailed information: Subject and summary snippet.
-- Logging of changes.
+- **Detailed information**: Subject and summary snippet.
+- **Logging of changes**.
 
 ## 🌍 Cross-Platform Compatibility
 This project is designed to be universal and runs seamlessly on **Linux, Windows, and macOS**.
@@ -31,6 +32,10 @@ This project is designed to be universal and runs seamlessly on **Linux, Windows
    ```env
    GMAIL_USERNAME=your_email@gmail.com
    GMAIL_PASSWORD=your_app_password
+
+   # OPTIONAL: Monitor multiple accounts
+   # Format: email1:pass1,email2:pass2
+   GMAIL_ACCOUNTS=other_user@gmail.com:pass123,another_user@gmail.com:pass456
    ```
 
 ### 🔑 How to get a Gmail App Password
@@ -45,9 +50,16 @@ Standard passwords will not work. You must generate a 16-character **App Passwor
 8. Paste this code into the `GMAIL_PASSWORD` field in your `.env` file (remove any spaces).
 
 ## Usage
-Run the script:
+### Standard Mode
+Run the script directly:
 ```bash
 python gmail_notifier.py
+```
+
+### Development Mode (Auto-Reload)
+If you are changing settings or code, use the reloader to automatically restart upon changes:
+```bash
+python reload.py
 ```
 
 ## Files
